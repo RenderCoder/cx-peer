@@ -6,7 +6,8 @@ description: >
   /cx-peer-loop, asks to iterate review until pass, or wants Codex to审核代码/
   文档/计划并反复修改 (cx-peer-loop, 审核直到通过, 反复送审). Effort variants
   are /cx-peer-loop-low through /cx-peer-loop-ultra. Requires the sibling
-  cx-peer skill. Do not use when the current host is already Codex.
+  cx-peer skill. Always spawn a separate `codex exec` process, even when
+  the host is already Codex.
 ---
 
 # cx-peer-loop

@@ -4,7 +4,7 @@ description: >
   Review an artifact with local Codex CLI using gpt-6.1-sol and
   model_reasoning_effort=high, then have the host fix and resubmit
   until Codex passes. Use when the user runs /cx-peer-loop-high. Requires the
-  sibling cx-peer skill. Do not use when the current host is already Codex.
+  sibling cx-peer skill. Always spawn a separate `codex exec` process, even when the host is already Codex.
 ---
 
 # cx-peer-loop-high

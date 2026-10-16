@@ -9,7 +9,7 @@ A read-only peer skill for the local Codex CLI. Default model is `gpt-6.1-sol` w
 
 Effort suffixes work on both commands: `-low`, `-medium`, `-high`, `-xhigh`, `-ultra`. Example: `/cx-peer-loop-xhigh`.
 
-Codex does not edit the repo. The agent that runs the skill applies changes.
+Always start a separate `codex exec` process for the peer review, even when the host agent is already Codex. The peer process does not invoke this skill. The host applies changes; Codex in that peer process does not edit the repo.
 
 ## Install
 

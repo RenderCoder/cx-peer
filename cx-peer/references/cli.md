@@ -11,7 +11,7 @@
 - 沙箱：首轮 `-s read-only`；`resume` **不要** `-s`
 - 禁止：`--ephemeral`、`--last`、`fork`（失败恢复和普通续轮）、`--output-schema`、实验 `--enable`、`--approve-for-me`、`--dangerously-bypass-approvals-and-sandbox`
 - 不要用 `omx ask` / MCP 冒充本技能
-- 当前宿主已经是 Codex 时：不要递归调自己
+- 即使当前宿主已经是 Codex，也必须另开独立的 `codex exec` 进程做评审；不要在本会话里自己审自己。同伴进程不要再调用本技能
 
 `--approve-for-me` 会改用 `workspace-write`；`--dangerously-bypass-approvals-and-sandbox` 会绕过沙箱。二者都破坏只读契约。
 

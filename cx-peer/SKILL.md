@@ -5,8 +5,9 @@ description: >
   the user runs /cx-peer for a design/architecture freeze, or /cx-peer-loop
   to review an artifact and iterate until Codex passes (咨询 Codex, 让 Codex 审,
   ask Codex, cx-peer-loop, 审核直到通过). Effort variants are /cx-peer-low
-  through /cx-peer-ultra. Do not use when the current host is already Codex,
-  or when the user only names a model/effort.
+  through /cx-peer-ultra. Always spawn a separate `codex exec` process,
+  even when the host is already Codex. Do not use when the user only names
+  a model/effort.
 ---
 
 # cx-peer
@@ -20,4 +21,4 @@ description: >
 | `/cx-peer` 及 `/cx-peer-{low,medium,high,xhigh,ultra}` | 咨询 | [references/consult.md](references/consult.md) |
 | `/cx-peer-loop` 及 `/cx-peer-loop-{low,medium,high,xhigh,ultra}` | 闭环 | [references/loop.md](references/loop.md) |
 
-用户同时说了咨询和闭环时走闭环。当前宿主已经是 Codex 时停止，不要递归。
+用户同时说了咨询和闭环时走闭环。即使宿主已经是 Codex，也按 [references/cli.md](references/cli.md) 另开 `codex exec`，不要在本会话里自己审自己。

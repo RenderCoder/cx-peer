@@ -3,7 +3,7 @@ name: cx-peer-ultra
 description: >
   Consult local Codex CLI as a read-only peer using gpt-6.1-sol and
   model_reasoning_effort=ultra. Use when the user runs /cx-peer-ultra.
-  Do not use when the current host is already Codex.
+  Always spawn a separate `codex exec` process, even when the host is already Codex.
 ---
 
 # cx-peer-ultra
