@@ -4,10 +4,10 @@
 
 被审目录是 Git 仓库时，默认不要 `--skip-git-repo-check`。不是 Git 仓库时，首轮和每一次 `resume` 都必须带 `--skip-git-repo-check`。
 
+模型与思考深度见 [effort.md](effort.md)。下列命令里的 `<effort>` 按该表解析。
+
 ## 默认
 
-- 模型：`gpt-5.6-sol`
-- 深度：`-c model_reasoning_effort="xhigh"`
 - 沙箱：首轮 `-s read-only`；`resume` **不要** `-s`
 - 禁止：`--ephemeral`、`--last`、`fork`（失败恢复和普通续轮）、`--output-schema`、实验 `--enable`、`--approve-for-me`、`--dangerously-bypass-approvals-and-sandbox`
 - 不要用 `omx ask` / MCP 冒充本技能
@@ -22,7 +22,7 @@
 ## 首轮
 
 ```bash
-codex exec -s read-only -m gpt-5.6-sol -c model_reasoning_effort="xhigh" --json -o <out> - < <prompt> > <jsonl> 2> <err>
+codex exec -s read-only -m gpt-6.1-sol -c model_reasoning_effort="<effort>" --json -o <out> - < <prompt> > <jsonl> 2> <err>
 ```
 
 从**这份** JSONL 取 `thread.started.thread_id`。成功 = 这份 JSONL 出现 `turn.completed`，且读的是这份 `-o`。不要用包装脚本或 shell 退出码当成败（zsh 里 `status` 是只读变量）。
@@ -32,7 +32,7 @@ codex exec -s read-only -m gpt-5.6-sol -c model_reasoning_effort="xhigh" --json 
 仅当已经有 `thread_id` 且出现 `turn.failed`（含代理 503/502）。恢复提示要短，不要整篇重灌原始 prompt。每轮最多两次外层 resume（合计三个 attempt）。无 thread id：修正启动问题后重新首轮。
 
 ```bash
-printf '%s\n' '继续完成上一轮请求，约束不变。' | codex exec resume <thread_id> -m gpt-5.6-sol -c model_reasoning_effort="xhigh" --json -o <out> - > <jsonl> 2> <err>
+printf '%s\n' '继续完成上一轮请求，约束不变。' | codex exec resume <thread_id> -m gpt-6.1-sol -c model_reasoning_effort="<effort>" --json -o <out> - > <jsonl> 2> <err>
 ```
 
 ## 同一 thread 的下一观点轮
@@ -40,7 +40,7 @@ printf '%s\n' '继续完成上一轮请求，约束不变。' | codex exec resum
 新提示词文件，attempt 从该轮 `a1` 起。`resume` 不要 `-s`。
 
 ```bash
-codex exec resume <thread_id> -m gpt-5.6-sol -c model_reasoning_effort="xhigh" --json -o <out> - < <prompt> > <jsonl> 2> <err>
+codex exec resume <thread_id> -m gpt-6.1-sol -c model_reasoning_effort="<effort>" --json -o <out> - < <prompt> > <jsonl> 2> <err>
 ```
 
 ## 提示词最低内容

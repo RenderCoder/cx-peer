@@ -2,8 +2,6 @@
 set -euo pipefail
 
 SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-PEER_SRC="${SOURCE}/cx-peer"
-LOOP_SRC="${SOURCE}/cx-peer-loop"
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 
 ROOTS=(
@@ -15,7 +13,7 @@ ROOTS=(
 
 usage() {
   printf '%s\n' "Usage: bash scripts/install.sh" \
-    "Links cx-peer and cx-peer-loop into ~/.agents/skills, ~/.claude/skills, ~/.grok/skills, and \${CODEX_HOME:-~/.codex}/skills."
+    "Links every in-repo skill directory into ~/.agents/skills, ~/.claude/skills, ~/.grok/skills, and \${CODEX_HOME:-~/.codex}/skills."
 }
 
 physical_join() {
@@ -64,11 +62,12 @@ ours_link() {
   local resolved
   [[ -L "$dest" ]] || return 1
   resolved="$(link_target_abs "$dest")"
-  case "$resolved" in
-    "$SOURCE"|"${SOURCE}/cx-peer"|"${SOURCE}/cx-peer-loop"|"${SOURCE}/aliases/cx-peer-loop")
-      return 0
-      ;;
-  esac
+  if [[ "$resolved" == "$SOURCE" || "$resolved" == "${SOURCE}/aliases/cx-peer-loop" ]]; then
+    return 0
+  fi
+  if [[ "$resolved" == "$SOURCE"/* && -f "${resolved}/SKILL.md" ]]; then
+    return 0
+  fi
   return 1
 }
 
@@ -90,20 +89,28 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   exit 0
 fi
 
-[[ -f "${PEER_SRC}/SKILL.md" && -f "${LOOP_SRC}/SKILL.md" ]] || {
-  printf 'install.sh: missing skill files under %s\n' "$SOURCE" >&2
+SKILLS=()
+shopt -s nullglob
+for skill_md in "$SOURCE"/*/SKILL.md; do
+  SKILLS+=("$(cd "$(dirname "$skill_md")" && pwd -P)")
+done
+[[ ${#SKILLS[@]} -gt 0 ]] || {
+  printf 'install.sh: no skill directories under %s\n' "$SOURCE" >&2
   exit 1
 }
 
 for root in "${ROOTS[@]}"; do
   mkdir -p "$root"
-  prepare_dest "${root}/cx-peer"
-  prepare_dest "${root}/cx-peer-loop"
-  ln -sfn "$PEER_SRC" "${root}/cx-peer"
-  ln -sfn "$LOOP_SRC" "${root}/cx-peer-loop"
+  for src in "${SKILLS[@]}"; do
+    name="$(basename "$src")"
+    prepare_dest "${root}/${name}"
+    ln -sfn "$src" "${root}/${name}"
+  done
 done
 
-printf '%s\n' "cx-peer -> ${PEER_SRC}" "cx-peer-loop -> ${LOOP_SRC}"
+for src in "${SKILLS[@]}"; do
+  printf '%s -> %s\n' "$(basename "$src")" "$src"
+done
 for root in "${ROOTS[@]}"; do
   printf 'linked %s\n' "$root"
 done

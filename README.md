@@ -1,11 +1,13 @@
 # cx-peer
 
-A read-only peer skill for the local Codex CLI.
+A read-only peer skill for the local Codex CLI. Default model is `gpt-6.1-sol` with `model_reasoning_effort=high`.
 
 | Command | What it does |
 | --- | --- |
-| `/cx-peer` | Consult and freeze a single recommendation. At most 3 viewpoint rounds. |
-| `/cx-peer-loop` | Review an artifact (code, docs, or a plan). The host applies the review, then resubmits until Codex passes. Default cap is 20 rounds. |
+| `/cx-peer` | Consult and freeze a single recommendation. At most 3 viewpoint rounds. Effort `high`. |
+| `/cx-peer-loop` | Review an artifact (code, docs, or a plan). The host applies the review, then resubmits until Codex passes. Default cap is 20 rounds. Effort `high`. |
+
+Effort suffixes work on both commands: `-low`, `-medium`, `-high`, `-xhigh`, `-ultra`. Example: `/cx-peer-loop-xhigh`.
 
 Codex does not edit the repo. The agent that runs the skill applies changes.
 
@@ -16,9 +18,9 @@ git clone git@github.com:RenderCoder/cx-peer.git
 bash cx-peer/scripts/install.sh
 ```
 
-The installer links the in-repo `cx-peer/` and `cx-peer-loop/` directories as sibling skills under four roots: `~/.agents/skills`, `~/.claude/skills`, `~/.grok/skills` (Grok Build), and `${CODEX_HOME:-~/.codex}/skills` (Codex CLI). Do not link the repo root as a skill (that nests the alias). If a destination is already occupied by another path, the installer prints the path and stops. It only replaces a link that already points at this repo.
+The installer links every in-repo skill directory as a sibling under four roots: `~/.agents/skills`, `~/.claude/skills`, `~/.grok/skills` (Grok Build), and `${CODEX_HOME:-~/.codex}/skills` (Codex CLI). Do not link the repo root as a skill (that nests aliases). If a destination is already occupied by another path, the installer prints the path and stops. It only replaces a link that already points at this repo.
 
-After install, Grok Build and Codex CLI both use `/cx-peer` or `/cx-peer-loop`.
+After install, Grok Build and Codex CLI both use `/cx-peer`, `/cx-peer-loop`, and the effort variants.
 
 ## Project files
 
@@ -29,4 +31,4 @@ The skill writes `.cx-peer/` at the **root of the project under review**:
 
 ## Default model
 
-`gpt-5.6-sol`, `model_reasoning_effort=xhigh`, first turn `read-only`. Details: `cx-peer/references/cli.md`.
+`gpt-6.1-sol`, `model_reasoning_effort=high`, first turn `read-only`. Details: `cx-peer/references/cli.md` and `cx-peer/references/effort.md`.
