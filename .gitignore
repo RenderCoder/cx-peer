@@ -1,3 +1,5 @@
 .DS_Store
 .scratch/
 .cx-peer/
+.omx/
+.code-review-graph/

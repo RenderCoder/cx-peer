@@ -1,19 +1,23 @@
 # CLI 协议
 
-本机 `codex exec`。v1 不写包装脚本。命令从**被审项目的仓库根**运行。默认不要 `--skip-git-repo-check`。
+本机 `codex exec`。v1 不写包装脚本。命令从**被审项目根**运行。
+
+被审目录是 Git 仓库时，默认不要 `--skip-git-repo-check`。不是 Git 仓库时，首轮和每一次 `resume` 都必须带 `--skip-git-repo-check`。
 
 ## 默认
 
 - 模型：`gpt-5.6-sol`
 - 深度：`-c model_reasoning_effort="xhigh"`
 - 沙箱：首轮 `-s read-only`；`resume` **不要** `-s`
-- 禁止：`--ephemeral`、`--last`、`fork`（失败恢复和普通续轮）、`--output-schema`、实验 `--enable`
+- 禁止：`--ephemeral`、`--last`、`fork`（失败恢复和普通续轮）、`--output-schema`、实验 `--enable`、`--approve-for-me`、`--dangerously-bypass-approvals-and-sandbox`
 - 不要用 `omx ask` / MCP 冒充本技能
 - 当前宿主已经是 Codex 时：不要递归调自己
 
+`--approve-for-me` 会改用 `workspace-write`；`--dangerously-bypass-approvals-and-sandbox` 会绕过沙箱。二者都破坏只读契约。
+
 ## 路径占位
 
-下列命令里的文件都落在当前 session 目录（见 [records.md](records.md)）。`<prompt>` `<out>` `<jsonl>` `<err>` 每次 attempt 独立，禁止复用失败 attempt 的 `-o`。
+下列命令里的文件都落在当前 session 目录（见 [records.md](records.md)）。`<prompt>` `<out>` `<jsonl>` `<err>` 每次 attempt 独立，禁止复用失败 attempt 的 `-o`。非 Git 仓库时在 `codex exec` 与 `codex exec resume` 上都加上 `--skip-git-repo-check`。
 
 ## 首轮
 

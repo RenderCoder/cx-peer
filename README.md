@@ -16,7 +16,7 @@ git clone git@github.com:RenderCoder/cx-peer.git
 bash cx-peer/scripts/install.sh
 ```
 
-把本仓链到 `~/.agents/skills/cx-peer` 与 `~/.claude/skills/cx-peer`，并把 `aliases/cx-peer-loop` 链到同名技能。不要再链到 `~/.grok/skills` 或 `~/.codex/skills`（同名会重复注册）。
+把仓内 `cx-peer/` 与 `cx-peer-loop/` 链成 skills 根下两个同级目录。不要把仓根链成技能（会把别名嵌进去）。安装器若发现目标已被其它路径占用会报路径并停止；仅当旧链接已指向本仓时才改过来。不要再链到 `~/.grok/skills` 或 `~/.codex/skills`（同名会重复注册）。
 
 Grok 在仓内还会扫 `.agents/skills`，装完后用 `/cx-peer` 或 `/cx-peer-loop`。
 
@@ -29,7 +29,7 @@ Grok 在仓内还会扫 `.agents/skills`，装完后用 `/cx-peer` 或 `/cx-peer
 
 ## 默认模型
 
-`gpt-5.6-sol`，`model_reasoning_effort=xhigh`，首轮 `read-only`。细节在 `references/cli.md`。
+`gpt-5.6-sol`，`model_reasoning_effort=xhigh`，首轮 `read-only`。细节在 `cx-peer/references/cli.md`。
 
 ## 来源
 
