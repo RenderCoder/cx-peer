@@ -16,9 +16,9 @@ git clone git@github.com:RenderCoder/cx-peer.git
 bash cx-peer/scripts/install.sh
 ```
 
-把仓内 `cx-peer/` 与 `cx-peer-loop/` 链成 skills 根下两个同级目录。不要把仓根链成技能（会把别名嵌进去）。安装器若发现目标已被其它路径占用会报路径并停止；仅当旧链接已指向本仓时才改过来。不要再链到 `~/.grok/skills` 或 `~/.codex/skills`（同名会重复注册）。
+把仓内 `cx-peer/` 与 `cx-peer-loop/` 链成四个 skills 根下的同级目录：`~/.agents/skills`、`~/.claude/skills`、`~/.grok/skills`（Grok Build）、`${CODEX_HOME:-~/.codex}/skills`（Codex CLI）。不要把仓根链成技能（会把别名嵌进去）。安装器若发现目标已被其它路径占用会报路径并停止；仅当旧链接已指向本仓时才改过来。
 
-Grok 在仓内还会扫 `.agents/skills`，装完后用 `/cx-peer` 或 `/cx-peer-loop`。
+装完后 Grok Build 与 Codex CLI 都用 `/cx-peer` 或 `/cx-peer-loop`。
 
 ## 项目内文件
 

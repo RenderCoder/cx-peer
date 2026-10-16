@@ -2,13 +2,20 @@
 set -euo pipefail
 
 SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-AGENTS="${HOME}/.agents/skills"
-CLAUDE="${HOME}/.claude/skills"
 PEER_SRC="${SOURCE}/cx-peer"
 LOOP_SRC="${SOURCE}/cx-peer-loop"
+CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+
+ROOTS=(
+  "${HOME}/.agents/skills"
+  "${HOME}/.claude/skills"
+  "${HOME}/.grok/skills"
+  "${CODEX_HOME}/skills"
+)
 
 usage() {
-  printf '%s\n' "Usage: bash scripts/install.sh" "Links cx-peer and cx-peer-loop into ~/.agents/skills and ~/.claude/skills."
+  printf '%s\n' "Usage: bash scripts/install.sh" \
+    "Links cx-peer and cx-peer-loop into ~/.agents/skills, ~/.claude/skills, ~/.grok/skills, and \${CODEX_HOME:-~/.codex}/skills."
 }
 
 physical_join() {
@@ -88,19 +95,15 @@ fi
   exit 1
 }
 
-mkdir -p "$AGENTS" "$CLAUDE"
+for root in "${ROOTS[@]}"; do
+  mkdir -p "$root"
+  prepare_dest "${root}/cx-peer"
+  prepare_dest "${root}/cx-peer-loop"
+  ln -sfn "$PEER_SRC" "${root}/cx-peer"
+  ln -sfn "$LOOP_SRC" "${root}/cx-peer-loop"
+done
 
-prepare_dest "${AGENTS}/cx-peer"
-prepare_dest "${AGENTS}/cx-peer-loop"
-prepare_dest "${CLAUDE}/cx-peer"
-prepare_dest "${CLAUDE}/cx-peer-loop"
-
-ln -sfn "$PEER_SRC" "${AGENTS}/cx-peer"
-ln -sfn "$LOOP_SRC" "${AGENTS}/cx-peer-loop"
-ln -sfn "$PEER_SRC" "${CLAUDE}/cx-peer"
-ln -sfn "$LOOP_SRC" "${CLAUDE}/cx-peer-loop"
-
-printf '%s\n' \
-  "cx-peer -> ${PEER_SRC}" \
-  "cx-peer-loop -> ${LOOP_SRC}" \
-  "linked from ${AGENTS} and ${CLAUDE}"
+printf '%s\n' "cx-peer -> ${PEER_SRC}" "cx-peer-loop -> ${LOOP_SRC}"
+for root in "${ROOTS[@]}"; do
+  printf 'linked %s\n' "$root"
+done
